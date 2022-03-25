@@ -1,0 +1,114 @@
+version: '3.1'
+
+networks:
+  default:
+    name: intranet
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./configs/postgres:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+
+  kong:
+    image: kong
+    environment:
+      KONG_DATABASE: "off"
+      KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+      KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+      KONG_PROXY_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
+      KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.yml"
+      KONG_PLUGINS: "bundled,kong-jwt2header"
+    user: root
+    command: >
+      bash -c "
+        luarocks install kong-jwt2header &&
+        kong start
+      "     
+    volumes:
+      - ./configs/kong:/opt/kong
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+      - "8444:8444"
+    links:
+      - authenticator
+      - registration-information
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./configs/prometheus:/etc/prometheus
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./configs/grafana:/etc/grafana/provisioning
+    links:
+      - prometheus
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=This_is_my_secret_phrase
+      - RABBITMQ_DEFAULT_USER=mqadmin
+      - RABBITMQ_DEFAULT_PASS=mqadmin
+    volumes:
+      - ./configs/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./configs/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+
+  elasticsearch:
+    image: elasticsearch:7.9.2
+    ports:
+      - '9200:9200'
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  kibana:
+    image: kibana:7.9.2
+    ports:
+      - '5601:5601'
+
+  logstash:
+    image: logstash:7.9.2
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./configs/logstash:/usr/share/logstash/pipeline:ro
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  registration-information:
+    build: ../registration-information
+    expose:
+      - "8080"
+      - "8081"
+
+  authenticator:
+    build: ../authenticator
+    expose:
+      - "1323"

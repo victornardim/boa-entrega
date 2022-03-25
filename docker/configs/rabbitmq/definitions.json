@@ -1,0 +1,68 @@
+{
+  "rabbit_version": "3.6.6",
+  "users": [],
+  "vhosts": [],
+  "permissions": [],
+  "parameters": [],
+  "policies": [],
+  "queues": [
+    {
+      "name": "MERCHANDISE_CREATE_QUEUE",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "MERCHANDISE_UPDATE_QUEUE",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "MERCHANDISE_DELETE_QUEUE",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "MERCHANDISE_TOPIC",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "MERCHANDISE_TOPIC",
+      "vhost": "/",
+      "destination": "MERCHANDISE_CREATE_QUEUE",
+      "destination_type": "queue",
+      "routing_key": "MERCHANDISE_CREATE",
+      "arguments": {}
+    },
+    {
+      "source": "MERCHANDISE_TOPIC",
+      "vhost": "/",
+      "destination": "MERCHANDISE_UPDATE_QUEUE",
+      "destination_type": "queue",
+      "routing_key": "MERCHANDISE_UPDATE",
+      "arguments": {}
+    },
+    {
+      "source": "MERCHANDISE_TOPIC",
+      "vhost": "/",
+      "destination": "MERCHANDISE_DELETE_QUEUE",
+      "destination_type": "queue",
+      "routing_key": "MERCHANDISE_DELETE",
+      "arguments": {}
+    }
+  ]
+}

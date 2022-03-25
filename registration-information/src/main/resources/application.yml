@@ -1,0 +1,57 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-type: application/json
+  servlet:
+    context-path: /registration-information
+  shutdown: graceful
+  forward-headers-strategy: framework
+
+springdoc:
+  swagger-ui:
+    path: '/doc'
+
+spring:
+  datasource:
+    url: jdbc:postgresql://172.17.0.1:5432/registration-information
+    username: postgres
+    password: postgres
+
+cache:
+  host: 172.17.0.1
+  port: 6379
+
+management:
+  endpoint:
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  server:
+    port: 8081
+
+messaging:
+  host: 172.17.0.1
+  port: 5672
+  username: mqadmin
+  password: mqadmin
+  topics:
+    mercadoria: MERCHANDISE_TOPIC
+  queues:
+    mercadoria:
+      create:
+        name: MERCHANDISE_CREATE_QUEUE
+        routing-key: MERCHANDISE_CREATE
+      update:
+        name: MERCHANDISE_UPDATE_QUEUE
+        routing-key: MERCHANDISE_UPDATE
+      delete:
+        name: MERCHANDISE_DELETE_QUEUE
+        routing-key: MERCHANDISE_DELETE

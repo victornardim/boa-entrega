@@ -1,0 +1,63 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: authenticator
+    url: http://authenticator:1323
+    routes:
+      - name: authenticator-service-routes
+        paths:
+          - /authenticator/
+
+  - name: registration-information
+    url: http://registration-information:8080
+    routes:
+      - name: registration-information-protected-routes
+        paths:
+          - /registration-information
+        strip_path: false
+      - name: registration-information-doc-routes
+        paths:
+          - /registration-information/doc
+          - /registration-information/swagger-ui
+          - /registration-information/v3/api-docs
+        strip_path: false
+
+consumers:
+- username: registration-information
+
+plugins:
+- name: jwt
+  route: registration-information-protected-routes
+  config: 
+    secret_is_base64: false
+    run_on_preflight: true
+    claims_to_verify:
+      - exp
+
+- name: kong-jwt2header
+
+- name: rate-limiting
+  route: registration-information-protected-routes
+  config: 
+    minute: 20
+    limit_by: header
+    header_name: X-Kong-JWT-Claim-Sub
+    policy: local
+    fault_tolerant: true
+    hide_client_headers: false
+
+- name: rate-limiting
+  service: authenticator
+  config: 
+    minute: 1
+    limit_by: ip
+    policy: local
+    fault_tolerant: true
+    hide_client_headers: false
+
+jwt_secrets:
+- consumer: registration-information
+  key: lOt8Se2zjaDCjP6ZxEEnBd7cLBVyJR9V
+  secret: 4iy3XCOvuqXJN5tI5oiBOVDaqkvF9g4S
+  algorithm: HS512
