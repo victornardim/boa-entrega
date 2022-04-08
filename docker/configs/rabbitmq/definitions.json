@@ -21,7 +21,49 @@
       "arguments": {}
     },
     {
+      "name": "MERCHANDISE_QUANTITY_UPDATE_QUEUE",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "MERCHANDISE_QUANTITY_UPDATE_REPLY_QUEUE",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
       "name": "MERCHANDISE_DELETE_QUEUE",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "ORDER_CREATE_QUEUE",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "ORDER_NEXT_STEP_QUEUE",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "ORDER_CANCEL_QUEUE",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "ORDER_CREATE_LEGACY_QUEUE",
       "vhost": "/",
       "durable": true,
       "auto_delete": false,
@@ -31,6 +73,15 @@
   "exchanges": [
     {
       "name": "MERCHANDISE_TOPIC",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "ORDER_TOPIC",
       "vhost": "/",
       "type": "direct",
       "durable": true,
@@ -59,9 +110,49 @@
     {
       "source": "MERCHANDISE_TOPIC",
       "vhost": "/",
+      "destination": "MERCHANDISE_QUANTITY_UPDATE_QUEUE",
+      "destination_type": "queue",
+      "routing_key": "MERCHANDISE_QUANTITY_UPDATE",
+      "arguments": {}
+    },
+    {
+      "source": "MERCHANDISE_TOPIC",
+      "vhost": "/",
+      "destination": "MERCHANDISE_QUANTITY_UPDATE_REPLY_QUEUE",
+      "destination_type": "queue",
+      "routing_key": "MERCHANDISE_QUANTITY_UPDATE_REPLY",
+      "arguments": {}
+    },
+    {
+      "source": "MERCHANDISE_TOPIC",
+      "vhost": "/",
       "destination": "MERCHANDISE_DELETE_QUEUE",
       "destination_type": "queue",
       "routing_key": "MERCHANDISE_DELETE",
+      "arguments": {}
+    },
+    {
+      "source": "ORDER_TOPIC",
+      "vhost": "/",
+      "destination": "ORDER_CREATE_QUEUE",
+      "destination_type": "queue",
+      "routing_key": "ORDER_CREATE",
+      "arguments": {}
+    },
+    {
+      "source": "ORDER_TOPIC",
+      "vhost": "/",
+      "destination": "ORDER_NEXT_STEP_QUEUE",
+      "destination_type": "queue",
+      "routing_key": "ORDER_NEXT_STEP",
+      "arguments": {}
+    },
+    {
+      "source": "ORDER_TOPIC",
+      "vhost": "/",
+      "destination": "ORDER_CANCEL_QUEUE",
+      "destination_type": "queue",
+      "routing_key": "ORDER_CANCEL",
       "arguments": {}
     }
   ]

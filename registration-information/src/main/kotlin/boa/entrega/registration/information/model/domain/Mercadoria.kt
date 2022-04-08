@@ -1,8 +1,8 @@
 package boa.entrega.registration.information.model.domain
 
 import boa.entrega.registration.information.model.dto.MercadoriaDto
-import java.util.UUID
 import java.util.Date
+import java.util.UUID
 
 data class Mercadoria(
     val id: UUID,

@@ -1,3 +1,3 @@
 # Authenticator
 
-This application authenticate the credentials for all applications from logistic services management.
+This application authenticate the credentials for all the other Boa Entrega's app.

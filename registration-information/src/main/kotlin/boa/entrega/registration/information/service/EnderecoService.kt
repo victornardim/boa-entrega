@@ -1,7 +1,7 @@
 package boa.entrega.registration.information.service
 
-import boa.entrega.registration.information.repository.EnderecoRepository
 import boa.entrega.registration.information.model.domain.Endereco
+import boa.entrega.registration.information.repository.EnderecoRepository
 import org.springframework.stereotype.Service
 import java.util.UUID
 

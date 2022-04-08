@@ -52,6 +52,12 @@ messaging:
       update:
         name: MERCHANDISE_UPDATE_QUEUE
         routing-key: MERCHANDISE_UPDATE
+      update-quantidade:
+        name: MERCHANDISE_QUANTITY_UPDATE_QUEUE
+        routing-key: MERCHANDISE_QUANTITY_UPDATE
+      update-quantidade-reply:
+        name: MERCHANDISE_QUANTITY_UPDATE_REPLY_QUEUE
+        routing-key: MERCHANDISE_QUANTITY_UPDATE_REPLY
       delete:
         name: MERCHANDISE_DELETE_QUEUE
         routing-key: MERCHANDISE_DELETE

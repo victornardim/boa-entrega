@@ -42,6 +42,7 @@ services:
     links:
       - authenticator
       - registration-information
+      - orders
 
   prometheus:
     image: prom/prometheus:latest
@@ -104,6 +105,12 @@ services:
 
   registration-information:
     build: ../registration-information
+    expose:
+      - "8080"
+      - "8081"
+
+  orders:
+    build: ../orders
     expose:
       - "8080"
       - "8081"

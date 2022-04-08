@@ -1,26 +1,25 @@
 package boa.entrega.registration.information.controller
 
+import boa.entrega.registration.information.facade.MercadoriaFacade
 import boa.entrega.registration.information.model.dto.MercadoriaDto
-import boa.entrega.registration.information.model.dto.MercadoriaQuantidadeDto
-import boa.entrega.registration.information.model.dto.MercadoriaSlimDto
-import boa.entrega.registration.information.service.MercadoriaService
+import boa.entrega.registration.information.model.form.MercadoriaCreateForm
 import io.micrometer.core.annotation.Timed
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 import javax.validation.Valid
 
@@ -31,7 +30,7 @@ import javax.validation.Valid
 @RestController("Mercadoria controller")
 @RequestMapping("/v1/mercadoria")
 class MercadoriaController(
-    private val service: MercadoriaService
+    private val facade: MercadoriaFacade
 ) {
     @GetMapping("/fornecedor/{fornecedorId}")
     @Operation(summary = "Devolve todas as mercadorias de um fornecedor específico")
@@ -40,7 +39,7 @@ class MercadoriaController(
         @PathVariable("fornecedorId") fornecedorId: UUID,
         @RequestParam(required = false, defaultValue = "0") offset: Int,
         @RequestParam(required = false, defaultValue = "50") limit: Int
-    ): Collection<MercadoriaDto> = service.listByFornecedor(fornecedorId, offset, limit).map { it.toDto() }
+    ): Collection<MercadoriaDto> = facade.listByFornecedor(fornecedorId, offset, limit).map { it.toDto() }
 
     @GetMapping("/deposito/{depositoId}")
     @Operation(summary = "Devolve todas as mercadorias de um depósito específico")
@@ -49,7 +48,7 @@ class MercadoriaController(
         @PathVariable("depositoId") depositoId: UUID,
         @RequestParam(required = false, defaultValue = "0") offset: Int,
         @RequestParam(required = false, defaultValue = "50") limit: Int
-    ): Collection<MercadoriaDto> = service.listByDeposito(depositoId, offset, limit).map { it.toDto() }
+    ): Collection<MercadoriaDto> = facade.listByDeposito(depositoId, offset, limit).map { it.toDto() }
 
     @GetMapping("/{id}")
     @Operation(summary = "Devolve uma mercadoria")
@@ -57,14 +56,14 @@ class MercadoriaController(
     @Cacheable(key = "{#id}", cacheNames = ["mercadoria"], cacheManager = "mercadoriaCacheManager")
     fun get(
         @PathVariable("id") id: UUID
-    ): MercadoriaDto = service.get(id).toDto()
+    ): MercadoriaDto = facade.get(id).toDto()
 
     @PostMapping()
     @Operation(summary = "Cria uma nova mercadoria")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
-        @RequestBody() @Valid mercadoriaSlimDto: MercadoriaSlimDto
-    ) = service.create(mercadoriaSlimDto)
+        @RequestBody() @Valid mercadoriaCreateForm: MercadoriaCreateForm
+    ) = facade.create(mercadoriaCreateForm)
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza todos os dados de uma mercadoria")
@@ -72,17 +71,17 @@ class MercadoriaController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(
         @PathVariable("id") id: UUID,
-        @RequestBody() @Valid mercadoriaSlimDto: MercadoriaSlimDto
-    ) = service.update(id, mercadoriaSlimDto)
+        @RequestBody() @Valid mercadoriaCreateForm: MercadoriaCreateForm
+    ) = facade.update(id, mercadoriaCreateForm)
 
     @PatchMapping("/{id}")
-    @Operation(summary = "Atualiza somente a quantidade de uma mercadoria")
+    @Operation(summary = "Adiciona à quantidadede uma mercadoria")
     @CacheEvict(value = ["mercadoria"], key = "{#id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun updateQuantity(
+    fun increaseQuantidade(
         @PathVariable("id") id: UUID,
-        @RequestBody() @Valid mercadoriaQuantidadeDto: MercadoriaQuantidadeDto
-    ) = service.updateQuantity(id, mercadoriaQuantidadeDto.quantidade)
+        @RequestBody() @Valid mercadoriaCreateForm: MercadoriaCreateForm
+    ) = facade.increaseQuantidade(id, mercadoriaCreateForm.quantidade)
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete uma mercadoria")
@@ -90,5 +89,5 @@ class MercadoriaController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(
         @PathVariable("id") id: UUID
-    ) = service.delete(id)
+    ) = facade.delete(id)
 }

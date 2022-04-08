@@ -74,6 +74,50 @@ CREATE INDEX idx_endereco_cep ON endereco(cep);
 
 --------------------------------------------------------------------------------------------------------
 
+CREATE DATABASE orders;
+
+\c orders
+
+CREATE TABLE pedido (
+    id UUID NOT NULL PRIMARY KEY,
+    codigo_rastreio VARCHAR(100) NOT NULL,
+    "data" TIMESTAMP WITH TIME ZONE NOT NULL,
+    cliente_id UUID NOT NULL
+);
+
+CREATE TABLE pedido_mercadoria (
+    pedido_id UUID NOT NULL,
+    mercadoria_id UUID NOT NULL,
+    quantidade DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY(pedido_id, mercadoria_id),
+    CONSTRAINT fk_pedido FOREIGN KEY (pedido_id) references pedido(id)
+);
+
+CREATE TABLE pedido_andamento (
+    id UUID NOT NULL PRIMARY KEY,
+    pedido_id UUID NOT NULL,
+    "data" TIMESTAMP WITH TIME ZONE NOT NULL,
+    status VARCHAR(100) NOT NULL,
+    CONSTRAINT fk_pedido FOREIGN KEY (pedido_id) references pedido(id)
+);
+
+CREATE TABLE pedido_requisicao (
+    requisicao_id UUID NOT NULL,
+    pedido_id UUID NOT NULL,
+    PRIMARY KEY(requisicao_id, pedido_id),
+    CONSTRAINT fk_pedido FOREIGN KEY (pedido_id) references pedido(id)
+);
+
+CREATE INDEX idx_pedido_codigo_rastreio ON pedido(codigo_rastreio);
+CREATE INDEX idx_pedido_data ON pedido("data");
+CREATE INDEX idx_pedido_cliente_id ON pedido(cliente_id);
+CREATE INDEX idx_pedido_andamento_pedido_id ON pedido_andamento(pedido_id);
+CREATE INDEX idx_pedido_andamento_data ON pedido_andamento("data");
+CREATE INDEX idx_pedido_requisicao_requisicao_id ON pedido_requisicao(requisicao_id);
+CREATE INDEX idx_pedido_requisicao_pedido_id ON pedido_requisicao(pedido_id);
+
+--------------------------------------------------------------------------------------------------------
+
 CREATE DATABASE authenticator;
 
 \c authenticator

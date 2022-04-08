@@ -1,8 +1,7 @@
 package boa.entrega.registration.information.service
 
-import boa.entrega.registration.information.repository.ClienteRepository
 import boa.entrega.registration.information.model.domain.Cliente
-import boa.entrega.registration.information.publisher.MercadoriaPublisher
+import boa.entrega.registration.information.repository.ClienteRepository
 import org.springframework.stereotype.Service
 import java.util.UUID
 

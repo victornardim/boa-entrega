@@ -1,6 +1,6 @@
-# Logistic Services Management
+# Boa Entrega
 
-This repository contains all the applications from the logistic services management solution.
+This repository contains all the services and applications from Boa Entrega logistics company.
 
 
 ## Apps
@@ -11,7 +11,7 @@ This repository contains all the applications from the logistic services managem
 http://localhost:8000/registration-information
 
 #### Doc
-http://localhost:8000/registration-information/doc
+http://localhost:8000/swagger-ui/index.html
 
 #### Metrics
 http://localhost:8081/actuator/prometheus

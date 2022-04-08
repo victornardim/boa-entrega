@@ -1,0 +1,70 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-type: application/json
+  servlet:
+    context-path: /orders
+  shutdown: graceful
+  forward-headers-strategy: framework
+
+springdoc:
+  swagger-ui:
+    path: '/doc'
+
+spring:
+  datasource:
+    url: jdbc:postgresql://172.17.0.1:5432/orders
+    username: postgres
+    password: postgres
+
+cache:
+  host: 172.17.0.1
+  port: 6379
+
+management:
+  endpoint:
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  server:
+    port: 8081
+
+messaging:
+  host: 172.17.0.1
+  port: 5672
+  username: mqadmin
+  password: mqadmin
+  topics:
+    pedido: ORDER_TOPIC
+    mercadoria: MERCHANDISE_TOPIC
+  queues:
+    pedido:
+      create:
+        name: ORDER_CREATE_QUEUE
+        routing-key: ORDER_CREATE
+      next-step:
+        name: ORDER_NEXT_STEP_QUEUE
+        routing-key: ORDER_NEXT_STEP
+      cancel:
+        name: ORDER_CANCEL_QUEUE
+        routing-key: ORDER_CANCEL
+    legacy:
+      pedido:
+        create:
+          name: ORDER_CREATE_LEGACY_QUEUE
+    mercadoria:
+      update-quantidade-reply:
+        name: MERCHANDISE_QUANTITY_UPDATE_REPLY_QUEUE
+        routing-key: MERCHANDISE_QUANTITY_UPDATE_REPLY
+
+clients:
+  registration-information:
+    url: http://172.17.0.1:8000/registration-information

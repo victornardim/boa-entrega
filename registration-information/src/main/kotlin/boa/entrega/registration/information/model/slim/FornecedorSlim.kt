@@ -4,7 +4,7 @@ import boa.entrega.registration.information.model.domain.Endereco
 import boa.entrega.registration.information.model.domain.Fornecedor
 import java.util.UUID
 
-data class FornecedorSlim (
+data class FornecedorSlim(
     val id: UUID,
     val razaoSocial: String,
     val nomeFantasia: String,

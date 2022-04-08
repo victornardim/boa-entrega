@@ -23,8 +23,22 @@ services:
           - /registration-information/v3/api-docs
         strip_path: false
 
+  - name: orders
+    url: http://orders:8080
+    routes:
+      - name: orders-protected-routes
+        paths:
+          - /orders
+        strip_path: false
+      - name: orders-doc-routes
+        paths:
+          - /orders/doc
+          - /orders/swagger-ui
+          - /orders/v3/api-docs
+        strip_path: false
+
 consumers:
-- username: registration-information
+- username: default
 
 plugins:
 - name: jwt
@@ -35,10 +49,30 @@ plugins:
     claims_to_verify:
       - exp
 
+- name: jwt
+  route: orders-protected-routes
+  config: 
+    secret_is_base64: false
+    run_on_preflight: true
+    claims_to_verify:
+      - exp
+
 - name: kong-jwt2header
+  config:
+    token_required: "false"
 
 - name: rate-limiting
   route: registration-information-protected-routes
+  config: 
+    minute: 20
+    limit_by: header
+    header_name: X-Kong-JWT-Claim-Sub
+    policy: local
+    fault_tolerant: true
+    hide_client_headers: false
+
+- name: rate-limiting
+  route: orders-protected-routes
   config: 
     minute: 20
     limit_by: header
@@ -57,7 +91,7 @@ plugins:
     hide_client_headers: false
 
 jwt_secrets:
-- consumer: registration-information
+- consumer: default
   key: lOt8Se2zjaDCjP6ZxEEnBd7cLBVyJR9V
   secret: 4iy3XCOvuqXJN5tI5oiBOVDaqkvF9g4S
   algorithm: HS512

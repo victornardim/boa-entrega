@@ -17,7 +17,7 @@ data class EnderecoDto(
     val cep: String,
     val latitude: Double,
     val longitude: Double
-): Serializable {
+) : Serializable {
     fun toDomain(): Endereco =
         Endereco(
             id = id,

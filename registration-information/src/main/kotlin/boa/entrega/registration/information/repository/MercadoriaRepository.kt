@@ -1,6 +1,7 @@
 package boa.entrega.registration.information.repository
 
 import boa.entrega.registration.information.mapper.MercadoriaMapper
+import boa.entrega.registration.information.mapper.QuantidadeMapper
 import boa.entrega.registration.information.model.slim.MercadoriaSlim
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
 import org.springframework.stereotype.Repository
@@ -9,12 +10,14 @@ import java.util.UUID
 @Repository
 class MercadoriaRepository(
     private val jdbcOperations: NamedParameterJdbcOperations,
-    private val mapper: MercadoriaMapper
+    private val mapper: MercadoriaMapper,
+    private val quantidadeMapper: QuantidadeMapper
 ) {
     companion object {
         private val LIST_BY_SUPPLIER = this::class.java.getResource("/queries/mercadoria/list-by-fornecedor.sql").readText()
         private val LIST_BY_WAREHOUSE = this::class.java.getResource("/queries/mercadoria/list-by-deposito.sql").readText()
         private val GET = this::class.java.getResource("/queries/mercadoria/get.sql").readText()
+        private val GET_QUANTIDADE = this::class.java.getResource("/queries/mercadoria/get-quantidade.sql").readText()
         private val CREATE = this::class.java.getResource("/queries/mercadoria/create.sql").readText()
         private val UPDATE = this::class.java.getResource("/queries/mercadoria/update.sql").readText()
         private val UPDATE_QUANTITY = this::class.java.getResource("/queries/mercadoria/update-quantidade.sql").readText()
@@ -48,6 +51,13 @@ class MercadoriaRepository(
             GET,
             mapOf("id" to id),
             mapper
+        ).first()
+
+    fun getQuantidade(id: UUID): Double =
+        jdbcOperations.query(
+            GET_QUANTIDADE,
+            mapOf("id" to id),
+            quantidadeMapper
         ).first()
 
     fun create(mercadoriaSlim: MercadoriaSlim) =

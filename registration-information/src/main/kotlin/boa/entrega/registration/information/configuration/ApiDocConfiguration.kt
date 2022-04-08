@@ -1,8 +1,8 @@
 package boa.entrega.registration.information.configuration
 
+import org.springdoc.core.GroupedOpenApi
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springdoc.core.GroupedOpenApi
 
 @Configuration
 class ApiDocConfiguration {

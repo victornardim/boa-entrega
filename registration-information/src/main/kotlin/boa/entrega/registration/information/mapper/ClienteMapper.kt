@@ -7,7 +7,7 @@ import java.sql.ResultSet
 import java.util.UUID
 
 @Component
-class ClienteMapper: RowMapper<ClienteSlim> {
+class ClienteMapper : RowMapper<ClienteSlim> {
     override fun mapRow(resultSet: ResultSet, rowNum: Int): ClienteSlim =
         ClienteSlim(
             id = UUID.fromString(resultSet.getString("id")),

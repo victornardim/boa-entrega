@@ -7,7 +7,7 @@ import java.sql.ResultSet
 import java.util.UUID
 
 @Component
-class FornecedorMapper: RowMapper<FornecedorSlim> {
+class FornecedorMapper : RowMapper<FornecedorSlim> {
     override fun mapRow(resultSet: ResultSet, rowNum: Int): FornecedorSlim =
         FornecedorSlim(
             id = UUID.fromString(resultSet.getString("id")),

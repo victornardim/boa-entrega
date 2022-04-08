@@ -8,7 +8,7 @@ import java.sql.ResultSet
 import java.util.UUID
 
 @Component
-class EnderecoMapper: RowMapper<Endereco> {
+class EnderecoMapper : RowMapper<Endereco> {
     override fun mapRow(resultSet: ResultSet, rowNum: Int): Endereco = Endereco(
         id = UUID.fromString(resultSet.getString("id")),
         tipo = EnderecoTipo.valueOf(resultSet.getString("tipo")),

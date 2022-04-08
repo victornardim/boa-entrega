@@ -9,7 +9,7 @@ import java.sql.ResultSet
 import java.util.UUID
 
 @Component
-class DepositoMapper: RowMapper<DepositoSlim> {
+class DepositoMapper : RowMapper<DepositoSlim> {
     override fun mapRow(resultSet: ResultSet, rowNum: Int): DepositoSlim =
         DepositoSlim(
             id = UUID.fromString(resultSet.getString("id")),

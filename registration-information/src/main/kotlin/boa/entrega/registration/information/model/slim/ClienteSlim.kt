@@ -4,7 +4,7 @@ import boa.entrega.registration.information.model.domain.Cliente
 import boa.entrega.registration.information.model.domain.Endereco
 import java.util.UUID
 
-data class ClienteSlim (
+data class ClienteSlim(
     val id: UUID,
     val enderecoId: UUID,
     val name: String,

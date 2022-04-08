@@ -1,14 +1,14 @@
 package boa.entrega.registration.information.mapper
 
-import boa.entrega.registration.information.model.slim.MercadoriaSlim
 import boa.entrega.registration.information.model.domain.MercadoriaTipo
+import boa.entrega.registration.information.model.slim.MercadoriaSlim
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Component
 import java.sql.ResultSet
 import java.util.UUID
 
 @Component
-class MercadoriaMapper: RowMapper<MercadoriaSlim> {
+class MercadoriaMapper : RowMapper<MercadoriaSlim> {
     override fun mapRow(resultSet: ResultSet, rowNum: Int): MercadoriaSlim =
         MercadoriaSlim(
             id = UUID.fromString(resultSet.getString("id")),
