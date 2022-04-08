@@ -22,7 +22,22 @@ This repository contains all the applications from the logistic services managem
 http://localhost:8000/registration-information
 
 #### Doc
-http://localhost:8000/swagger-ui/index.html
+http://localhost:8000/orders/doc
+
+#### Metrics
+http://localhost:8081/actuator/prometheus
+
+
+### Orders
+
+[![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?&style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)](https://spring.io/projects/spring-boot)
+
+#### App
+http://localhost:8000/orders
+
+#### Doc
+http://localhost:8000/orders/doc
 
 #### Metrics
 http://localhost:8081/actuator/prometheus
