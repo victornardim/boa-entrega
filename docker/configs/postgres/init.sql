@@ -101,20 +101,11 @@ CREATE TABLE pedido_andamento (
     CONSTRAINT fk_pedido FOREIGN KEY (pedido_id) references pedido(id)
 );
 
-CREATE TABLE pedido_requisicao (
-    requisicao_id UUID NOT NULL,
-    pedido_id UUID NOT NULL,
-    PRIMARY KEY(requisicao_id, pedido_id),
-    CONSTRAINT fk_pedido FOREIGN KEY (pedido_id) references pedido(id)
-);
-
 CREATE INDEX idx_pedido_codigo_rastreio ON pedido(codigo_rastreio);
 CREATE INDEX idx_pedido_data ON pedido("data");
 CREATE INDEX idx_pedido_cliente_id ON pedido(cliente_id);
 CREATE INDEX idx_pedido_andamento_pedido_id ON pedido_andamento(pedido_id);
 CREATE INDEX idx_pedido_andamento_data ON pedido_andamento("data");
-CREATE INDEX idx_pedido_requisicao_requisicao_id ON pedido_requisicao(requisicao_id);
-CREATE INDEX idx_pedido_requisicao_pedido_id ON pedido_requisicao(pedido_id);
 
 --------------------------------------------------------------------------------------------------------
 

@@ -1,6 +1,5 @@
 package boa.entrega.orders.repository
 
-import boa.entrega.orders.mapper.AndamentoMapper
 import boa.entrega.orders.mapper.PedidoMapper
 import boa.entrega.orders.model.domain.AndamentoStatus
 import boa.entrega.orders.model.slim.PedidoSlim
@@ -11,8 +10,7 @@ import java.util.UUID
 @Repository
 class PedidoRepository(
     private val jdbcOperations: NamedParameterJdbcOperations,
-    private val mapper: PedidoMapper,
-    private val andamentoMappper: AndamentoMapper,
+    private val mapper: PedidoMapper
 ) {
     companion object {
         private val LIST_BY_ANDAMENTO = this::class.java.getResource("/queries/pedido/list-by-andamento.sql").readText()
@@ -37,7 +35,7 @@ class PedidoRepository(
         jdbcOperations.query(
             LIST_BY_CLIENTE,
             mapOf(
-                "cliente_id" to clienteId,
+                "clienteId" to clienteId,
                 "offset" to offset,
                 "limit" to limit
             ),

@@ -7,3 +7,4 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['registration-information:8081']
+      - targets: ['orders:8081']

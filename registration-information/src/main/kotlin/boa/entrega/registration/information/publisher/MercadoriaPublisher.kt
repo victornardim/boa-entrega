@@ -1,7 +1,7 @@
 package boa.entrega.registration.information.publisher
 
+import boa.entrega.registration.information.model.message.MercadoriaDecreaseQuantidadeMessage
 import boa.entrega.registration.information.model.message.MercadoriaMessage
-import boa.entrega.registration.information.model.message.MercadoriaUpdateQuantidadeBatchMessage
 import boa.entrega.registration.information.model.message.Message
 import boa.entrega.registration.information.model.message.Reply
 import org.springframework.beans.factory.annotation.Value
@@ -26,7 +26,7 @@ class MercadoriaPublisher(
         publisher.publish(TOPIC, ROUTING_KEY_UPDATE, message)
     }
 
-    fun publishQuantidadeDecrease(message: Message<MercadoriaUpdateQuantidadeBatchMessage>) {
+    fun publishQuantidadeDecrease(message: Message<MercadoriaDecreaseQuantidadeMessage>) {
         publisher.publish(TOPIC, ROUTING_KEY_UPDATE_QUANTIDADE, message)
     }
 

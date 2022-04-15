@@ -1,8 +1,9 @@
 package boa.entrega.registration.information.controller
 
-import boa.entrega.registration.information.facade.MercadoriaFacade
 import boa.entrega.registration.information.model.dto.MercadoriaDto
 import boa.entrega.registration.information.model.form.MercadoriaCreateForm
+import boa.entrega.registration.information.model.form.MercadoriaIncreaseQuantidadeForm
+import boa.entrega.registration.information.service.MercadoriaService
 import io.micrometer.core.annotation.Timed
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -30,7 +31,7 @@ import javax.validation.Valid
 @RestController("Mercadoria controller")
 @RequestMapping("/v1/mercadoria")
 class MercadoriaController(
-    private val facade: MercadoriaFacade
+    private val service: MercadoriaService
 ) {
     @GetMapping("/fornecedor/{fornecedorId}")
     @Operation(summary = "Devolve todas as mercadorias de um fornecedor específico")
@@ -39,7 +40,7 @@ class MercadoriaController(
         @PathVariable("fornecedorId") fornecedorId: UUID,
         @RequestParam(required = false, defaultValue = "0") offset: Int,
         @RequestParam(required = false, defaultValue = "50") limit: Int
-    ): Collection<MercadoriaDto> = facade.listByFornecedor(fornecedorId, offset, limit).map { it.toDto() }
+    ): Collection<MercadoriaDto> = service.listByFornecedor(fornecedorId, offset, limit).map { it.toDto() }
 
     @GetMapping("/deposito/{depositoId}")
     @Operation(summary = "Devolve todas as mercadorias de um depósito específico")
@@ -48,7 +49,7 @@ class MercadoriaController(
         @PathVariable("depositoId") depositoId: UUID,
         @RequestParam(required = false, defaultValue = "0") offset: Int,
         @RequestParam(required = false, defaultValue = "50") limit: Int
-    ): Collection<MercadoriaDto> = facade.listByDeposito(depositoId, offset, limit).map { it.toDto() }
+    ): Collection<MercadoriaDto> = service.listByDeposito(depositoId, offset, limit).map { it.toDto() }
 
     @GetMapping("/{id}")
     @Operation(summary = "Devolve uma mercadoria")
@@ -56,14 +57,14 @@ class MercadoriaController(
     @Cacheable(key = "{#id}", cacheNames = ["mercadoria"], cacheManager = "mercadoriaCacheManager")
     fun get(
         @PathVariable("id") id: UUID
-    ): MercadoriaDto = facade.get(id).toDto()
+    ): MercadoriaDto = service.get(id).toDto()
 
     @PostMapping()
     @Operation(summary = "Cria uma nova mercadoria")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
-        @RequestBody() @Valid mercadoriaCreateForm: MercadoriaCreateForm
-    ) = facade.create(mercadoriaCreateForm)
+        @RequestBody() @Valid form: MercadoriaCreateForm
+    ) = service.create(form)
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza todos os dados de uma mercadoria")
@@ -71,8 +72,8 @@ class MercadoriaController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(
         @PathVariable("id") id: UUID,
-        @RequestBody() @Valid mercadoriaCreateForm: MercadoriaCreateForm
-    ) = facade.update(id, mercadoriaCreateForm)
+        @RequestBody() @Valid form: MercadoriaCreateForm
+    ) = service.update(id, form)
 
     @PatchMapping("/{id}")
     @Operation(summary = "Adiciona à quantidadede uma mercadoria")
@@ -80,8 +81,8 @@ class MercadoriaController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun increaseQuantidade(
         @PathVariable("id") id: UUID,
-        @RequestBody() @Valid mercadoriaCreateForm: MercadoriaCreateForm
-    ) = facade.increaseQuantidade(id, mercadoriaCreateForm.quantidade)
+        @RequestBody() @Valid form: MercadoriaIncreaseQuantidadeForm
+    ) = service.increaseQuantidade(id, form.quantidade)
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete uma mercadoria")
@@ -89,5 +90,5 @@ class MercadoriaController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(
         @PathVariable("id") id: UUID
-    ) = facade.delete(id)
+    ) = service.delete(id)
 }

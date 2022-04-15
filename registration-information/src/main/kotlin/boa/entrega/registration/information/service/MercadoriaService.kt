@@ -56,7 +56,7 @@ class MercadoriaService(
     @CacheEvict(value = ["mercadoria"], key = "{#id}")
     fun decreaseQuantidade(id: UUID, quantidade: Double) {
         val currentQuantidade = repository.getQuantidade(id)
-        (currentQuantidade - quantidade).takeIf { it > 0 }?.let { updatedQuantidade ->
+        (currentQuantidade - quantidade).takeIf { it >= 0 }?.let { updatedQuantidade ->
             repository.updateQuantity(id, updatedQuantidade)
             publisher.publishUpdate(repository.get(id).toMessage())
             logger.info("Decreased merchandise $id quantity by $quantidade resulting in $updatedQuantidade")

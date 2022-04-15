@@ -4,7 +4,7 @@ import java.util.UUID
 import javax.validation.constraints.DecimalMin
 import javax.validation.constraints.NotEmpty
 
-data class MercadoriaUpdateQuantidadeBatchForm(
+data class MercadoriaDecreaseQuantidadeForm(
     @NotEmpty
     val id: UUID,
 

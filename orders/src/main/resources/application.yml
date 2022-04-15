@@ -61,6 +61,9 @@ messaging:
         create:
           name: ORDER_CREATE_LEGACY_QUEUE
     mercadoria:
+      update-quantidade:
+        name: MERCHANDISE_QUANTITY_UPDATE_QUEUE
+        routing-key: MERCHANDISE_QUANTITY_UPDATE
       update-quantidade-reply:
         name: MERCHANDISE_QUANTITY_UPDATE_REPLY_QUEUE
         routing-key: MERCHANDISE_QUANTITY_UPDATE_REPLY

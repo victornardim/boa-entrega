@@ -5,10 +5,9 @@ import boa.entrega.orders.exception.dto.EntityNotFoundException
 import boa.entrega.orders.model.domain.Andamento
 import boa.entrega.orders.model.domain.AndamentoStatus
 import boa.entrega.orders.model.domain.Pedido
-import boa.entrega.orders.model.form.MercadoriaUpdateQuantidadeBatchForm
+import boa.entrega.orders.model.form.MercadoriaDecreaseQuantidadeForm
 import boa.entrega.orders.model.form.PedidoCreateForm
 import boa.entrega.orders.model.slim.PedidoSlim
-import boa.entrega.orders.model.slim.RequisicaoSlim
 import boa.entrega.orders.publisher.PedidoPublisher
 import boa.entrega.orders.repository.PedidoRepository
 import org.slf4j.LoggerFactory
@@ -25,7 +24,6 @@ class PedidoService(
     private val andamentoPedidoService: AndamentoPedidoService,
     private val mercadoriaService: MercadoriaService,
     private val clienteService: ClienteService,
-    private val requisicaoPedidoService: RequisicaoPedidoService
 ) {
     private val logger = LoggerFactory.getLogger(PedidoService::class.java)
 
@@ -58,23 +56,17 @@ class PedidoService(
             )
         )
 
-        val mercadoriaQuantidadeUpdateBatchForms: Collection<MercadoriaUpdateQuantidadeBatchForm> = pedidoCreateForm.mercadorias
+        val mercadoriaDecreaseQuantidadeForms: Collection<MercadoriaDecreaseQuantidadeForm> = pedidoCreateForm.mercadorias
             .map { mercadoriaCreateForm ->
                 mercadoriaPedidoService.create(id, mercadoriaCreateForm)
 
-                MercadoriaUpdateQuantidadeBatchForm(
+                MercadoriaDecreaseQuantidadeForm(
                     mercadoriaCreateForm.id,
                     mercadoriaCreateForm.quantidade
                 )
             }
 
-        val requisicaoId = mercadoriaService.updateQuantidade(mercadoriaQuantidadeUpdateBatchForms)
-        requisicaoPedidoService.create(
-            RequisicaoSlim(
-                requisicaoId = requisicaoId,
-                pedidoId = id
-            )
-        )
+        mercadoriaService.decreaseQuantidade(id, mercadoriaDecreaseQuantidadeForms)
         logger.info("Created new order ${pedidoCreateForm.toSlim(id)}")
 
         return id
